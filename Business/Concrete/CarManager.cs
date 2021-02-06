@@ -3,6 +3,7 @@ using DataAccess.Abstract;
 using Entities;
 using System;
 using System.Collections.Generic;
+using System.Linq.Expressions;
 using System.Text;
 
 namespace Business.Concrete
@@ -17,7 +18,13 @@ namespace Business.Concrete
 
         public void Add(Car car)
         {
-            _carDal.Add(car);
+            if (car.DailyPrice>0)
+            {
+                if (car.Description.Length>2)
+                {
+                    _carDal.Add(car);
+                }
+            }
         }
 
         public void Delete(Car car)
@@ -25,18 +32,31 @@ namespace Business.Concrete
             _carDal.Delete(car);
         }
 
-        public void GetByID(int id)
+        public Car Get(Expression<Func<Car, bool>> filter)
         {
-            _carDal.GetById(id);
+            return _carDal.Get(filter);
+        }
+
+        public List<Car> GetAll(Expression<Func<Car, bool>> filter)
+        {
+            return _carDal.GetAll(filter);
+        }
+
+        public List<Car> GetCarsByBrandId(int id)
+        {
+            return _carDal.GetCarsByBrandId(id);
+        }
+
+        public List<Car> GetCarsByColorId(int id)
+        {
+            return _carDal.GetCarsByColorId(id);
         }
 
         public void Update(Car car)
         {
             _carDal.Update(car);
         }
-        public List<Car> GetAll()
-        {
-            return _carDal.GetAll();
-        }
+        
+        
     }
 }
