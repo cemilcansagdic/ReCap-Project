@@ -7,7 +7,7 @@ using Entities;
 
 namespace DataAccess.Concrete.EntiityFramework
 {
-    class CarRentalContext : DbContext
+    public class CarRentalContext : DbContext
     {
         public CarRentalContext()
         {
@@ -19,6 +19,6 @@ namespace DataAccess.Concrete.EntiityFramework
         }
         public DbSet<Brand> Brands { get; set; }
         public DbSet<Car> Cars { get; set; }
-        public DbSet<Color> Customers { get; set; }
+        public DbSet<Color> Colors { get; set; }
     }
 }

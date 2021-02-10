@@ -6,47 +6,13 @@ using System.Linq.Expressions;
 using System.Text;
 using Microsoft.EntityFrameworkCore;
 using System.Linq;
+using Core.DataAccess.EntityFramework;
+using Entities.DTOs;
 
 namespace DataAccess.Concrete.EntiityFramework
 {
-    public class EfCarDal : ICarDal
+    public class EfCarDal : EfEntityRepositoryBase<Car,CarRentalContext>,ICarDal
     {
-        public void Add(Car entity)
-        {
-            using (CarRentalContext context = new CarRentalContext())
-            {
-                var addedEntity = context.Entry(entity);
-                addedEntity.State = EntityState.Added;
-                context.SaveChanges();
-            }
-        }
-
-        public void Delete(Car entity)
-        {
-            using (CarRentalContext context = new CarRentalContext())
-            {
-                var deletedEntity = context.Entry(entity);
-                deletedEntity.State = EntityState.Deleted;
-                context.SaveChanges();
-            }
-        }
-
-        public Car Get(Expression<Func<Car, bool>> filter)
-        {
-            using (CarRentalContext context = new CarRentalContext())
-            {
-                return context.Set<Car>().SingleOrDefault(filter);
-            }
-        }
-
-        public List<Car> GetAll(Expression<Func<Car, bool>> filter = null)
-        {
-            using (CarRentalContext context = new CarRentalContext())
-            {
-                return filter == null ? context.Set<Car>().ToList() : context.Set<Car>().Where(filter).ToList();
-            }
-        }
-
         public List<Car> GetCarsByBrandId(int id)
         {
             using (CarRentalContext context = new CarRentalContext())
@@ -63,13 +29,18 @@ namespace DataAccess.Concrete.EntiityFramework
             }
         }
 
-        public void Update(Car entity)
+        public List<CarDetailsDTO> ListAll()
         {
             using (CarRentalContext context = new CarRentalContext())
             {
-                var updatedEntity = context.Entry(entity);
-                updatedEntity.State = EntityState.Deleted;
-                context.SaveChanges();
+                var result = from c in context.Cars
+                             join b in context.Brands
+                             on c.BrandID equals b.ID
+                             join co in context.Colors
+                             on c.ColorId equals co.Id
+                             select new CarDetailsDTO { CarName = c.CarName, BrandName = b.BrandName, ColorName = co.ColorName, DailyPrice = c.DailyPrice };
+                // select new 
+                return result.ToList();
             }
         }
     }

@@ -1,4 +1,5 @@
 ﻿using Business.Abstract;
+using Core.DataAccess.EntityFramework;
 using DataAccess.Abstract;
 using Entities;
 using System;
@@ -25,6 +26,7 @@ namespace Business.Concrete
                     _carDal.Add(car);
                 }
             }
+
         }
 
         public void Delete(Car car)
